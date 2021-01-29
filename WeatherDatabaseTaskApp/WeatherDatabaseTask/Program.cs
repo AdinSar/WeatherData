@@ -142,7 +142,7 @@ namespace WeatherDatabaseTask
                         case 6:
                             Console.Clear();
                             Console.WriteLine(@"Datum för meteorologisk Vinter");
-                            GetStartOfVinter();
+                            GetStartOfWinter();
                             Console.ReadKey();
                             Console.Clear();
 
@@ -177,13 +177,13 @@ namespace WeatherDatabaseTask
             //OutLowestToHighestMoldriskByDay();
             //InLowestToHighestMoldriskByDay();
             //GetStartOfAutumn();
-            //GetStartOfVinter();
+            //GetStartOfWinter();
 
 
 
         }
 
-        private static void GetStartOfVinter()
+        private static void GetStartOfWinter()
         {
             using (var db = new EFContext())
             {
@@ -224,14 +224,14 @@ namespace WeatherDatabaseTask
                         }
                         else if (fiveCount == 5)
                         {
-                            Console.WriteLine(item.yeardate + "/" + item.monthdate + "/" + item.day + " är starten av den meteorologiska vintern");
+                            Console.WriteLine(item.yeardate + "/" + item.monthdate + "/" + (item.day-5) + " är starten av den meteorologiska vintern");
                             break;
 
                         }
                         else
                         {
-                            startDay = 0;
-                            fiveCount = 0;
+                            startDay = item.day;
+                            fiveCount = 1;
                         }
 
 
@@ -293,14 +293,14 @@ namespace WeatherDatabaseTask
                         }
                         else if (fiveCount == 5)
                         {
-                            Console.WriteLine(item.yeardate + "/" + item.monthdate + "/" + item.day + " är starten av den meteorologiska hösten");
+                            Console.WriteLine(item.yeardate + "/" + item.monthdate + "/" + (item.day-5) + " är starten av den meteorologiska hösten");
                             break;
 
                         }
                         else
                         {
-                            startDay = 0;
-                            fiveCount = 0;
+                            startDay = item.day;
+                            fiveCount = 1;
                         }
 
 
@@ -417,7 +417,7 @@ namespace WeatherDatabaseTask
                         w.Key.day,
                         AverageHumidity = w.Average(a => a.Humidity),
                         AverageTemperature = w.Average(a => a.Temperature),
-                        Moldrisk = Math.Round((w.Average(a => a.Temperature)) * ((w.Average(a => a.Humidity)) / 15) / 22, 2)
+                        Moldrisk = ((w.Average(a => a.Humidity) - 78) * ((w.Average(a => a.Temperature)) / 15) / 0.22)
                     })
                     .OrderBy(w => w.Moldrisk);
 
@@ -458,7 +458,7 @@ namespace WeatherDatabaseTask
                         w.Key.day,
                         AverageHumidity = w.Average(a => a.Humidity),
                         AverageTemperature = w.Average(a => a.Temperature),
-                        Moldrisk = Math.Round((w.Average(a => a.Temperature)) * ((w.Average(a => a.Humidity)) / 15) / 22, 2)
+                        Moldrisk =((w.Average(a => a.Humidity)-78) * ((w.Average(a => a.Temperature)) / 15) / 0.22)
                     })
                     .OrderBy(w => w.Moldrisk);
 
